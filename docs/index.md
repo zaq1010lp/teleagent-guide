@@ -67,10 +67,10 @@ AIGC:
   ContentProducer: '001191110102MAD55U9H0F10002'
   ContentPropagator: '001191110102MAD55U9H0F10002'
   Label: '1'
-  ProduceID: 'fd11619d-be1f-4293-a6ef-95beca9fd7b0'
-  PropagateID: 'fd11619d-be1f-4293-a6ef-95beca9fd7b0'
-  ReservedCode1: 'cd717e3f-aa96-4cf7-b2c5-70e212bd1ba9'
-  ReservedCode2: 'cd717e3f-aa96-4cf7-b2c5-70e212bd1ba9'
+  ProduceID: '78bfd948-2c7a-408a-a249-16dd969fd028'
+  PropagateID: '78bfd948-2c7a-408a-a249-16dd969fd028'
+  ReservedCode1: '8b181d39-bb4d-4cc5-8c09-8d8c21e48985'
+  ReservedCode2: '8b181d39-bb4d-4cc5-8c09-8d8c21e48985'
 ---
 
 ## 全站概览
@@ -101,6 +101,38 @@ AIGC:
     <div class="stat-num">72</div>
     <div class="stat-label">流程图</div>
   </div>
+</div>
+
+## 网站访问数据
+
+<div class="ta-traffic" id="ta-traffic" aria-label="网站访问数据" aria-live="polite">
+  <div class="ta-traffic__live">
+    <span class="ta-traffic__dot" aria-hidden="true"></span>
+    <b>LIVE</b>
+  </div>
+  <dl class="ta-traffic__metrics">
+    <div title="今日访问者数（去重），数据每日更新">
+      <dt>今日访问</dt>
+      <dd id="ta-today-visits">—</dd>
+      <small>VISITS</small>
+    </div>
+    <div>
+      <dt>今日浏览</dt>
+      <dd id="ta-today-views">—</dd>
+      <small>PV</small>
+    </div>
+    <div title="自 2026-08-17 起累计">
+      <dt>累计访问</dt>
+      <dd id="ta-total-visits">—</dd>
+      <small>VISITS</small>
+    </div>
+    <div title="自 2026-08-17 起累计">
+      <dt>累计浏览</dt>
+      <dd id="ta-total-views">—</dd>
+      <small>PV</small>
+    </div>
+  </dl>
+  <p class="ta-traffic__note">数据由 GitHub Traffic API 采集，每日自动更新</p>
 </div>
 
 <div class="home-section-nav">

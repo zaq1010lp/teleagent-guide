@@ -1,0 +1,13 @@
+{
+  "updatedAt": "2026-08-17T00:00:00.000Z",
+  "todayVisits": 0,
+  "todayViews": 0,
+  "cumulativeVisits": 0,
+  "cumulativeViews": 0,
+  "totalClones": 0,
+  "uniqueClones": 0,
+  "recent14Days": {
+    "visits": [],
+    "clones": []
+  }
+}

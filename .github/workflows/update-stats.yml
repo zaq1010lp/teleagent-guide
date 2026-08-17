@@ -1,0 +1,98 @@
+name: Update Visit Stats
+
+on:
+  schedule:
+    # 每天 UTC 0:00（北京时间 8:00）执行一次
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  # 需要仓库元数据读取权限来访问 traffic API
+  metadata: read
+
+jobs:
+  update-stats:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch traffic data and update stats.json
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          
+          # 获取仓库 views 数据（过去14天）
+          VIEWS=$(curl -s -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/traffic/views")
+          
+          echo "Views data: $VIEWS"
+          
+          # 获取仓库 clones 数据（过去14天）
+          CLONES=$(curl -s -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/traffic/clones")
+          
+          echo "Clones data: $CLONES"
+          
+          # 用 Node.js 解析数据并生成 stats.json
+          node -e "
+            const fs = require('fs');
+            
+            const views = JSON.parse(process.argv[1]);
+            const clones = JSON.parse(process.argv[2]);
+            
+            // 计算累计访问量和浏览量
+            const totalVisits = views.count || 0;
+            const totalViews = views.uniques || 0;
+            const totalClones = clones.count || 0;
+            const uniqueClones = clones.uniques || 0;
+            
+            // 获取今日数据
+            const today = new Date().toISOString().slice(0, 10);
+            const todayView = (views.views || []).find(v => v.timestamp.startsWith(today));
+            const todayVisits = todayView ? todayView.count : 0;
+            const todayViews = todayView ? todayView.uniques : 0;
+            
+            // 读取已有 stats.json（如果存在）
+            let existing = {};
+            try {
+              existing = JSON.parse(fs.readFileSync('docs/public/stats.json', 'utf8'));
+            } catch(e) {}
+            
+            // 累计值取 views API 的总量 + 已有累计中的历史值
+            // GitHub traffic API 只保留14天数据，所以需要累积
+            const cumulativeVisits = Math.max(existing.cumulativeVisits || 0, totalVisits + (existing.historicalVisits || 0));
+            const cumulativeViews = Math.max(existing.cumulativeViews || 0, totalViews + (existing.historicalViews || 0));
+            
+            const stats = {
+              updatedAt: new Date().toISOString(),
+              todayVisits: todayVisits,
+              todayViews: todayViews,
+              cumulativeVisits: cumulativeVisits,
+              cumulativeViews: cumulativeViews,
+              totalClones: totalClones,
+              uniqueClones: uniqueClones,
+              recent14Days: {
+                visits: views.views || [],
+                clones: clones.clones || []
+              }
+            };
+            
+            fs.writeFileSync('docs/public/stats.json', JSON.stringify(stats, null, 2));
+            console.log('Stats updated:', JSON.stringify(stats, null, 2));
+          " "$VIEWS" "$CLONES"
+
+      - name: Commit and push stats.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/public/stats.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update visit stats [skip ci]"
+            git push
+          fi

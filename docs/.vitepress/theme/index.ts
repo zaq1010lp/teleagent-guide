@@ -223,7 +223,58 @@ const Mermaid = defineComponent({
 
 export default {
   extends: DefaultTheme,
-  enhanceApp({ app }: any) {
+  enhanceApp({ app, router }: any) {
     app.component('Mermaid', Mermaid)
+
+    // 访问统计：页面加载后读取 stats.json 并填充首页数据（仅浏览器端执行）
+    const initTraffic = () => {
+      if (typeof document === 'undefined') return
+      const el = document.getElementById('ta-traffic')
+      if (!el) return
+
+      // 格式化数字（如 1234 → 1.2K）
+      const formatNum = (n: number): string => {
+        if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M'
+        if (n >= 1000) return (n / 1000).toFixed(1) + 'K'
+        return String(n)
+      }
+
+      // 本地今日访问近似计数（localStorage 去重）
+      const todayKey = 'ta-visited-' + new Date().toISOString().slice(0, 10)
+      if (typeof localStorage !== 'undefined' && !localStorage.getItem(todayKey)) {
+        localStorage.setItem(todayKey, '1')
+      }
+
+      // 从 stats.json 读取数据
+      const base = (import.meta as any).env?.BASE_URL || '/'
+      const statsUrl = base.endsWith('/') ? base + 'stats.json' : base + '/stats.json'
+
+      fetch(statsUrl)
+        .then(res => res.json())
+        .then(data => {
+          const elTV = document.getElementById('ta-today-visits')
+          const elTP = document.getElementById('ta-today-views')
+          const elCV = document.getElementById('ta-total-visits')
+          const elCP = document.getElementById('ta-total-views')
+          if (elTV) elTV.textContent = formatNum(data.todayVisits || 0)
+          if (elTP) elTP.textContent = formatNum(data.todayViews || 0)
+          if (elCV) elCV.textContent = formatNum(data.cumulativeVisits || 0)
+          if (elCP) elCP.textContent = formatNum(data.cumulativeViews || 0)
+        })
+        .catch(() => {
+          // 读取失败时显示破折号
+        })
+    }
+
+    // 路由变化后执行（包括首次加载）
+    if (router) {
+      router.onAfterRouteChanged = () => {
+        setTimeout(initTraffic, 100)
+      }
+    }
+    // 首次加载也执行（延迟确保客户端水合完成）
+    if (typeof window !== 'undefined') {
+      setTimeout(initTraffic, 300)
+    }
   },
 }
