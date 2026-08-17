@@ -8,8 +8,6 @@ on:
 
 permissions:
   contents: write
-  # 需要仓库元数据读取权限来访问 traffic API
-  metadata: read
 
 jobs:
   update-stats:
