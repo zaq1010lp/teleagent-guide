@@ -5,6 +5,7 @@ export default defineConfig({
   lang: 'zh-CN',
   title: 'TeleAgent 蓝皮书',
   description: 'TeleAgent 实战蓝皮书 — 从真实工作到 AI 工作系统',
+  base: '/teleagent-guide/',
   head: [
     ['meta', { name: 'theme-color', content: '#2563eb' }],
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
