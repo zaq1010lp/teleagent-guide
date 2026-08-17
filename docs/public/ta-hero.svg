@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" width="280" height="280">
+  <defs>
+    <linearGradient id="bgg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3c6e8f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e4258;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ringg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#5a8fb0;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#e87a3e;stop-opacity:0.6" />
+    </linearGradient>
+  </defs>
+  <circle cx="140" cy="140" r="130" fill="url(#bgg)" />
+  <circle cx="140" cy="140" r="130" fill="none" stroke="url(#ringg)" stroke-width="3" opacity="0.6" />
+  <circle cx="140" cy="140" r="105" fill="none" stroke="#5a8fb0" stroke-width="1.5" stroke-dasharray="4 6" opacity="0.3" />
+  <text x="140" y="105" text-anchor="middle" font-size="42" font-weight="800" fill="#ffffff" font-family="system-ui, sans-serif">T.A.</text>
+  <text x="140" y="145" text-anchor="middle" font-size="14" fill="#a8d4f0" font-family="system-ui, sans-serif" letter-spacing="2">蓝皮书</text>
+  <text x="140" y="180" text-anchor="middle" font-size="10" fill="#7aafc8" font-family="system-ui, sans-serif" letter-spacing="2">2026</text>
+  <path d="M 80 200 Q 140 230 200 200" fill="none" stroke="#e87a3e" stroke-width="2.5" stroke-linecap="round" opacity="0.7" />
+  <circle cx="80" cy="200" r="4" fill="#e87a3e" />
+  <circle cx="200" cy="200" r="4" fill="#e87a3e" />
+</svg>
